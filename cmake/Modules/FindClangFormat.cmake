@@ -1,5 +1,6 @@
 # Find clang-format
 find_program(ClangFormat_EXECUTABLE NAMES clang-format
+                                          clang-format-11.0
                                           clang-format-10.0
                                           clang-format-9.0
                                           clang-format-8.0
@@ -13,15 +14,16 @@ if(ClangFormat_EXECUTABLE)
   execute_process(COMMAND ${ClangFormat_EXECUTABLE} --version
                   OUTPUT_VARIABLE clang_format_version
                   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+  
+  message(STATUS "${clang_format_version}")
 
-
-  if(clang_format_version MATCHES "^clang-format version .*")
+  if(clang_format_version MATCHES ".*clang-format version .*")
     # Arch Linux
     # clang-format version 10.0.0
 
     # Ubuntu 18.04 LTS Output
     # clang-format version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
-    string(REGEX REPLACE "clang-format version ([0-9.]+).*"
+    string(REGEX REPLACE ".*clang-format version ([0-9.]+).*"
                          "\\1"
                          ClangFormat_VERSION
                          "${clang_format_version}")
@@ -37,6 +39,12 @@ if(ClangFormat_EXECUTABLE)
                          "\\1"
                          ClangFormat_VERSION
                          "${clang_format_version}")
+#  elseif(clang_format_version MATCHES "Cray clang-format version .*")
+    # Cray clang-format version 11.0.4  (bc9473a12d1f2f43cde01f962a11240263bd8908)
+#    string(REGEX REPLACE "Cray clang-format version ([0-9.]+).*"
+#                         "\\1"
+#                         ClangFormat_VERSION
+#                         "${clang_format_version}")
   else()
     set(ClangFormat_VERSION "0.0")
   endif()
